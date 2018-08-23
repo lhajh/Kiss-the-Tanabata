@@ -62,11 +62,28 @@
 			var evt = "onorientationchange" in window ? "orientationchange" : "resize";
 			window.addEventListener(evt, orientationchange);
 			function orientationchange () {
-				var width = window.screen.width;
-				var height = window.screen.height;
-				alert(width, height)
+				var cw = document.documentElement.clientWidth;
+				var _Width = 0,
+					_Height = 0,
+					sw = window.screen.width,
+					sh = window.screen.height;
+				// 在某些机型（如华为P9）下出现 srceen.width/height 值交换，所以进行大小值比较判断
+				_Width = sw < sh ? sw : sh;
+				_Height = sw >= sh ? sw : sh;
 				$print = $('#print');
-				if (width > height) {
+				if (cw == _Width) {
+					// 竖屏
+					// return;
+					$print.width(height);
+					$print.height(width);
+					$print.css('top', (height - width) / 2);
+					$print.css('left', 0 - (height - width) / 2);
+					$print.css('transform', 'rotate(90deg)');
+					$print.css('transform-origin', '50% 50%');
+				}
+				if (cw == _Height) {
+					// 横屏
+					// return;
 					$print.width(width);
 					$print.height(height);
 					$print.css('top', 0);
@@ -74,13 +91,9 @@
 					$print.css('transform', 'none');
 					$print.css('transform-origin', '50% 50%');
 				}
+				if (width > height) {
+				}
 				else {
-					$print.width(height);
-					$print.height(width);
-					$print.css('top', (height - width) / 2);
-					$print.css('left', 0 - (height - width) / 2);
-					$print.css('transform', 'rotate(90deg)');
-					$print.css('transform-origin', '50% 50%');
 				}
 			}
 			orientationchange()
