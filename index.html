@@ -9,31 +9,19 @@
 	<link rel="stylesheet" href="./css/reset.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
 	<style type="text/css">
+		html, body {
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+
 		@media screen and (orientation: portrait) {
-			html {
-				width: 100%;
-				height: 100%;
-				overflow: hidden;
-			}
-			body {
-				width: 100%;
-				height: 100%;
-				overflow: hidden;
-			}
 			#print {
 				position: absolute;
 			}
 		}
 
 		@media screen and (orientation: landscape) {
-			html {
-				width: 100%;
-				height: 100%;
-			}
-			body {
-				width: 100%;
-				height: 100%;
-			}
 			#print {
 				position: absolute;
 				top: 0;
@@ -53,50 +41,12 @@
 
 <body>
 	<h1 id="print" class="">
-		<img src="./IMG_0022.JPG" alt="">
+		<!-- <img src="./IMG_0022.JPG"> -->
+		<img src="./_MG_4652.JPG" width="100%" height="100%">
 	</h1>
 	<script type="text/javascript" src="./js/jquery.min.js"></script>
 	<script>
 		$(document).ready(function () {
-			// 监测屏幕变化, 使元素始终保持横屏状态
-			// var evt = "onorientationchange" in window ? "orientationchange" : "resize";
-			// window.addEventListener(evt, orientationchange);
-			// function orientationchange () {
-			// 	var cw = document.documentElement.clientWidth;
-			// 	var _Width = 0,
-			// 		_Height = 0,
-			// 		sw = window.screen.width,
-			// 		sh = window.screen.height;
-			// 	// 在某些机型（如华为P9）下出现 srceen.width/height 值交换，所以进行大小值比较判断
-			// 	_Width = sw < sh ? sw : sh;
-			// 	_Height = sw >= sh ? sw : sh;
-			// 	$print = $('#print');
-			// 	if (cw == _Width) {
-			// 		// 竖屏
-			// 		// return;
-			// 		$print.width(height);
-			// 		$print.height(width);
-			// 		$print.css('top', (height - width) / 2);
-			// 		$print.css('left', 0 - (height - width) / 2);
-			// 		$print.css('transform', 'rotate(90deg)');
-			// 		$print.css('transform-origin', '50% 50%');
-			// 	}
-			// 	if (cw == _Height) {
-			// 		// 横屏
-			// 		// return;
-			// 		$print.width(width);
-			// 		$print.height(height);
-			// 		$print.css('top', 0);
-			// 		$print.css('left', 0);
-			// 		$print.css('transform', 'none');
-			// 		$print.css('transform-origin', '50% 50%');
-			// 	}
-			// 	if (width > height) {
-			// 	}
-			// 	else {
-			// 	}
-			// }
-			// orientationchange()
 			var supportOrientation = typeof window.orientation === 'number' &&
 				typeof window.onorientationchange === 'object';
 
@@ -119,6 +69,9 @@
 				var $print = $('#print');
 				var width = document.body.clientWidth
 				var height = document.body.clientHeight
+				// var width = window.screen.width
+				// var height = window.screen.height
+				// console.log(width, height)
 				if (orientation === 'landscape') {
 					$print.width(width);
 					$print.height(height);
@@ -137,9 +90,10 @@
 			};
 
 			if (supportOrientation) {
+				// ios
 				window.addEventListener('orientationchange', updateOrientation, false);
 			} else {
-				//监听resize事件
+				// 监听resize事件
 				window.addEventListener('resize', updateOrientation, false);
 			}
 
