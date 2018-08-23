@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="./css/reset.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+	<style type="text/css">
+		@media screen and (orientation: portrait) {
+			html {
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+			}
+			body {
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+			}
+			#print {
+				position: absolute;
+			}
+		}
+
+		@media screen and (orientation: landscape) {
+			html {
+				width: 100%;
+				height: 100%;
+			}
+			body {
+				width: 100%;
+				height: 100%;
+			}
+			#print {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+			}
+		}
+
+		#print {
+			animation-duration: 8s;
+			animation-delay: 2s;
+			animation-iteration-count: infinite;
+		}
+	</style>
+</head>
+
+<body>
+	<h1 id="print" class="">
+		<img src="./IMG_0022.JPG" alt="">
+	</h1>
+	<script type="text/javascript" src="./js/jquery.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			var evt = "onorientationchange" in window ? "orientationchange" : "resize";
+			window.addEventListener(evt, function () {
+				var width = document.documentElement.clientWidth;
+				var height = document.documentElement.clientHeight;
+				$print = $('#print');
+				if (width > height) {
+					alert('w > h')
+					$print.width(width);
+					$print.height(height);
+					$print.css('top', 0);
+					$print.css('left', 0);
+					$print.css('transform', 'none');
+					$print.css('transform-origin', '50% 50%');
+				}
+				else {
+					alert('h > w')
+					$print.width(height);
+					$print.height(width);
+					$print.css('top', (height - width) / 2);
+					$print.css('left', 0 - (height - width) / 2);
+					$print.css('transform', 'rotate(90deg)');
+					$print.css('transform-origin', '50% 50%');
+				}
+			});
+		})
+	</script>
+</body>
+
+</html>
