@@ -58,13 +58,14 @@
 	<script type="text/javascript" src="./js/jquery.min.js"></script>
 	<script>
 		$(document).ready(function () {
+			// 监测屏幕变化, 使元素始终保持横屏状态
 			var evt = "onorientationchange" in window ? "orientationchange" : "resize";
-			window.addEventListener(evt, function () {
-				var width = document.documentElement.clientWidth;
-				var height = document.documentElement.clientHeight;
+			window.addEventListener(evt, orientationchange);
+			function orientationchange () {
+				var width = window.screen.width;
+				var height = window.screen.height;
 				$print = $('#print');
 				if (width > height) {
-					alert('w > h')
 					$print.width(width);
 					$print.height(height);
 					$print.css('top', 0);
@@ -73,7 +74,6 @@
 					$print.css('transform-origin', '50% 50%');
 				}
 				else {
-					alert('h > w')
 					$print.width(height);
 					$print.height(width);
 					$print.css('top', (height - width) / 2);
@@ -81,7 +81,8 @@
 					$print.css('transform', 'rotate(90deg)');
 					$print.css('transform-origin', '50% 50%');
 				}
-			});
+			}
+			orientationchange()
 		})
 	</script>
 </body>
