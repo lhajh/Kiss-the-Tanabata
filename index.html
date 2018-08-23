@@ -97,59 +97,53 @@
 			// 	}
 			// }
 			// orientationchange()
-			var supportOrientation = (typeof window.orientation === 'number' &&
-				typeof window.onorientationchange === 'object');
+			var supportOrientation = typeof window.orientation === 'number' &&
+				typeof window.onorientationchange === 'object';
 
-			var init = function () {
-				var htmlNode = document.body.parentNode,
-					orientation;
-				var updateOrientation = function () {
-					if (supportOrientation) {
-						orientation = window.orientation;
-						switch (orientation) {
-							case 90:
-							case -90:
-								orientation = 'landscape';
-								break;
-							default:
-								orientation = 'portrait';
-								break;
-						}
-					} else {
-						orientation = (window.innerWidth > window.innerHeight) ? 'landscape' : 'portrait';
-					}
-					htmlNode.setAttribute('class', orientation);
-					var $print = $('#print');
-					var width = document.body.clientWidth
-					var height = document.body.clientHeight
-					if (orientation === 'landscape') {
-						console.log('land')
-						$print.width(width);
-						$print.height(height);
-						$print.css('top', 0);
-						$print.css('left', 0);
-						$print.css('transform', 'none');
-						$print.css('transform-origin', '50% 50%');
-					} else {
-						$print.width(height);
-						$print.height(width);
-						$print.css('top', (height - width) / 2);
-						$print.css('left', 0 - (height - width) / 2);
-						$print.css('transform', 'rotate(90deg)');
-						$print.css('transform-origin', '50% 50%');
-					}
-				};
-
+			var orientation;
+			var updateOrientation = function () {
 				if (supportOrientation) {
-					window.addEventListener('orientationchange', updateOrientation, false);
+					orientation = window.orientation;
+					switch (orientation) {
+						case 90:
+						case -90:
+							orientation = 'landscape';
+							break;
+						default:
+							orientation = 'portrait';
+							break;
+					}
 				} else {
-					//监听resize事件
-					window.addEventListener('resize', updateOrientation, false);
+					orientation = (window.innerWidth > window.innerHeight) ? 'landscape' : 'portrait';
 				}
-
-				updateOrientation();
+				var $print = $('#print');
+				var width = document.body.clientWidth
+				var height = document.body.clientHeight
+				if (orientation === 'landscape') {
+					$print.width(width);
+					$print.height(height);
+					$print.css('top', 0);
+					$print.css('left', 0);
+					$print.css('transform', 'none');
+					$print.css('transform-origin', '50% 50%');
+				} else {
+					$print.width(height);
+					$print.height(width);
+					$print.css('top', (height - width) / 2);
+					$print.css('left', 0 - (height - width) / 2);
+					$print.css('transform', 'rotate(90deg)');
+					$print.css('transform-origin', '50% 50%');
+				}
 			};
-			init()
+
+			if (supportOrientation) {
+				window.addEventListener('orientationchange', updateOrientation, false);
+			} else {
+				//监听resize事件
+				window.addEventListener('resize', updateOrientation, false);
+			}
+
+			updateOrientation();
 		})
 	</script>
 </body>
