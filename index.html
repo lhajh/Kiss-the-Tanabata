@@ -9,49 +9,45 @@
 	<link rel="stylesheet" href="./css/reset.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
 	<style type="text/css">
-		html, body {
+		html,
+		body {
 			width: 100%;
 			height: 100%;
 			overflow: hidden;
 		}
 
-		@media screen and (orientation: portrait) {
-			#print {
-				position: absolute;
-			}
-		}
-
-		@media screen and (orientation: landscape) {
-			#print {
-				position: absolute;
-				top: 0;
-				left: 0;
-				width: 100%;
-				height: 100%;
-			}
-		}
-
 		#print {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+		}
+
+		/* #print {
 			animation-duration: 8s;
 			animation-delay: 2s;
 			animation-iteration-count: infinite;
-		}
+		} */
 	</style>
 </head>
 
 <body>
 	<h1 id="print" class="">
-		<!-- <img src="./IMG_0022.JPG"> -->
-		<img src="./11.JPG" width="100%" height="100%">
+		<img src="./IMG_0022.JPG" width="100%" height="100%">
 	</h1>
 	<script type="text/javascript" src="./js/jquery.min.js"></script>
 	<script>
 		$(document).ready(function () {
+			var $print = $('#print');
+
+			// 判断横竖屏 start
 			var supportOrientation = typeof window.orientation === 'number' &&
 				typeof window.onorientationchange === 'object';
-
 			var orientation;
-			var updateOrientation = function () {
+
+			updateOrientation();
+			function updateOrientation() {
 				if (supportOrientation) {
 					orientation = window.orientation;
 					switch (orientation) {
@@ -66,12 +62,8 @@
 				} else {
 					orientation = (window.innerWidth > window.innerHeight) ? 'landscape' : 'portrait';
 				}
-				var $print = $('#print');
 				var width = document.body.clientWidth
 				var height = document.body.clientHeight
-				// var width = window.screen.width
-				// var height = window.screen.height
-				// console.log(width, height)
 				if (orientation === 'landscape') {
 					$print.width(width);
 					$print.height(height);
@@ -90,14 +82,73 @@
 			};
 
 			if (supportOrientation) {
-				// ios
-				window.addEventListener('orientationchange', updateOrientation, false);
+				// safari
+				window.addEventListener('orientationchange', function () {
+					setTimeout(updateOrientation, 30)
+				}, false);
 			} else {
-				// 监听resize事件
-				window.addEventListener('resize', updateOrientation, false);
+				// 监听 resize 事件
+				window.addEventListener('resize', function () {
+					setTimeout(updateOrientation, 30)
+				}, false);
+			}
+			// 判断横竖屏 end
+
+			function GetRandomNum(Min, Max) {
+				var Range = Max - Min;
+				var Rand = Math.random();
+				return (Min + Math.round(Rand * Range));
+			}
+			GetRandomNum(1, 10);
+
+			function getRandomArray(startNum, endNum, size) {
+				//校验数据合法性
+				if (typeof startNum === 'number' && typeof endNum === 'number' && endNum >= startNum && typeof size === 'number' && (endNum - startNum + 1 >= size)) {
+					// 初始化数字数组
+					var array = [...Array(endNum + 1).keys()].slice(startNum),
+						randomArray = [];
+					//随机从数组中取数
+					while (array.length && size--) {
+						var cursor = ~~(Math.random() * array.length);
+						randomArray.push(...array.splice(cursor, 1));
+					}
+					return randomArray;
+				} else {
+					console.log('参数不合理')
+				}
 			}
 
-			updateOrientation();
+			getRandomArray(0, 20, 20);
+
+			// 动画状态: 0: 进入 1: 强调 2: 离开
+			var status = 0
+			function drow(n) {
+				// 判断状态
+				if (status >= 3) {
+					status = 0
+				}
+
+				// class 切换
+				if (status === 0) {
+					$print.removeClass().addClass('animated bounceInRight')
+					// 移除 class, 添加进入动画的 class; 切换图片 src
+				} else if (status === 1) {
+					$print.removeClass().addClass('animated flash')
+					n = GetRandomNum(4000, 6000)
+					// 移除 class, 添加强调动画的 class
+				} else if (status === 2) {
+					$print.removeClass().addClass('animated rotateOutUpRight')
+					// 移除 class, 添加离开动画的 class
+				}
+
+				status++
+				setTimeout(() => {
+					drow(GetRandomNum(1500, 3000))
+				}, n);
+
+			}
+			drow(1500)
+
 		})
 	</script>
 </body>
