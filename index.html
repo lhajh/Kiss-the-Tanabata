@@ -16,15 +16,22 @@
 			overflow: hidden;
 		}
 
-		#print {
+		#love {
 			position: fixed;
 			top: 0;
 			left: 0;
 			width: 100%;
 			height: 100%;
+			background: url('./img/bg.JPG');
+			background-size: 100% 100%;
 		}
 
-		/* #print {
+		#timesong {
+			border-width: 8px;
+			border-radius: 20px;
+		}
+
+		/* #love {
 			animation-duration: 8s;
 			animation-delay: 2s;
 			animation-iteration-count: infinite;
@@ -33,13 +40,25 @@
 </head>
 
 <body>
-	<h1 id="print" class="">
-		<img src="./IMG_0022.JPG" width="100%" height="100%">
-	</h1>
+	<div id="love">
+		<audio id="sweetNothings" src="http://www.170mv.com/kw/other.web.ne01.sycdn.kuwo.cn/resource/n2/48/87/3095479698.mp3" autoplay>
+			Your browser does not support the <code>audio</code> element.
+		</audio>
+		<p id="oath"></p>
+		<img id="timesong" src="./img/0.JPG" width="35%">
+	</div>
 	<script type="text/javascript" src="./js/jquery.min.js"></script>
-	<script>
+	<script type="text/javascript" src="./js/utils.js"></script>
+	<script type="text/javascript">
 		$(document).ready(function () {
-			var $print = $('#print');
+
+			var $love = $('#love');
+			var $oath = $('#oath')
+			var $timesong = $('#timesong')
+
+			// 图片边框样式
+			var borderStyle = ['inset', 'outset', 'ridge', 'dotted', 'dashed', 'solid', 'double', 'groove'];
+			var borderStyleLength = borderStyle.length
 
 			// 判断横竖屏 start
 			var supportOrientation = typeof window.orientation === 'number' &&
@@ -65,19 +84,19 @@
 				var width = document.body.clientWidth
 				var height = document.body.clientHeight
 				if (orientation === 'landscape') {
-					$print.width(width);
-					$print.height(height);
-					$print.css('top', 0);
-					$print.css('left', 0);
-					$print.css('transform', 'none');
-					$print.css('transform-origin', '50% 50%');
+					$love.width(width);
+					$love.height(height);
+					$love.css('top', 0);
+					$love.css('left', 0);
+					$love.css('transform', 'none');
+					$love.css('transform-origin', '50% 50%');
 				} else {
-					$print.width(height);
-					$print.height(width);
-					$print.css('top', (height - width) / 2);
-					$print.css('left', 0 - (height - width) / 2);
-					$print.css('transform', 'rotate(90deg)');
-					$print.css('transform-origin', '50% 50%');
+					$love.width(height);
+					$love.height(width);
+					$love.css('top', (height - width) / 2);
+					$love.css('left', 0 - (height - width) / 2);
+					$love.css('transform', 'rotate(90deg)');
+					$love.css('transform-origin', '50% 50%');
 				}
 			};
 
@@ -94,61 +113,50 @@
 			}
 			// 判断横竖屏 end
 
-			function GetRandomNum(Min, Max) {
-				var Range = Max - Min;
-				var Rand = Math.random();
-				return (Min + Math.round(Rand * Range));
-			}
-			GetRandomNum(1, 10);
-
-			function getRandomArray(startNum, endNum, size) {
-				//校验数据合法性
-				if (typeof startNum === 'number' && typeof endNum === 'number' && endNum >= startNum && typeof size === 'number' && (endNum - startNum + 1 >= size)) {
-					// 初始化数字数组
-					var array = [...Array(endNum + 1).keys()].slice(startNum),
-						randomArray = [];
-					//随机从数组中取数
-					while (array.length && size--) {
-						var cursor = ~~(Math.random() * array.length);
-						randomArray.push(...array.splice(cursor, 1));
-					}
-					return randomArray;
-				} else {
-					console.log('参数不合理')
-				}
-			}
-
-			getRandomArray(0, 20, 20);
-
 			// 动画状态: 0: 进入 1: 强调 2: 离开
-			var status = 0
+			var animateStatus = 0
 			function drow(n) {
 				// 判断状态
-				if (status >= 3) {
-					status = 0
+				if (animateStatus >= 3) {
+					animateStatus = 0
 				}
 
 				// class 切换
-				if (status === 0) {
-					$print.removeClass().addClass('animated bounceInRight')
+				if (animateStatus === 0) {
+					// $love.removeClass().addClass('animated bounceInRight')
 					// 移除 class, 添加进入动画的 class; 切换图片 src
-				} else if (status === 1) {
-					$print.removeClass().addClass('animated flash')
-					n = GetRandomNum(4000, 6000)
+				} else if (animateStatus === 1) {
+					// $love.removeClass().addClass('animated flash')
+					n = getRandomNum(4000, 6000)
 					// 移除 class, 添加强调动画的 class
-				} else if (status === 2) {
-					$print.removeClass().addClass('animated rotateOutUpRight')
+				} else if (animateStatus === 2) {
+					// $love.removeClass().addClass('animated rotateOutUpRight')
 					// 移除 class, 添加离开动画的 class
 				}
 
-				status++
+				animateStatus++
+
 				setTimeout(() => {
-					drow(GetRandomNum(1500, 3000))
+					drow(getRandomNum(1500, 3000))
 				}, n);
 
 			}
 			drow(1500)
 
+
+			function audioAutoPlay(id) {
+				var audio = document.getElementById(id),
+					play = function () {
+						audio.play();
+						document.removeEventListener("touchstart", play, false);
+					};
+				audio.play();
+				document.addEventListener("WeixinJSBridgeReady", function () {
+					play();
+				}, false);
+				document.addEventListener("touchstart", play, false);
+			}
+			audioAutoPlay('sweetNothings');
 		})
 	</script>
 </body>
