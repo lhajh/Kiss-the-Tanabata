@@ -103,12 +103,12 @@
 			if (supportOrientation) {
 				// safari
 				window.addEventListener('orientationchange', function () {
-					setTimeout(updateOrientation, 30)
+					setTimeout(updateOrientation, 80)
 				}, false);
 			} else {
 				// 监听 resize 事件
 				window.addEventListener('resize', function () {
-					setTimeout(updateOrientation, 30)
+					setTimeout(updateOrientation, 80)
 				}, false);
 			}
 			// 判断横竖屏 end
