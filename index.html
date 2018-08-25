@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>Document</title>
+	<title>Kiss the Tanabata</title>
 	<link rel="stylesheet" href="./css/reset.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
 	<style type="text/css">
@@ -17,7 +17,7 @@
 		}
 
 		#love {
-			position: fixed;
+			position: absolute;
 			top: 0;
 			left: 0;
 			width: 100%;
@@ -27,25 +27,20 @@
 		}
 
 		#timesong {
+			position: absolute;
 			border-width: 8px;
-			border-radius: 20px;
 		}
 
-		/* #love {
-			animation-duration: 8s;
-			animation-delay: 2s;
-			animation-iteration-count: infinite;
-		} */
 	</style>
 </head>
 
 <body>
 	<div id="love">
-		<audio id="sweetNothings" src="http://www.170mv.com/kw/other.web.ne01.sycdn.kuwo.cn/resource/n2/48/87/3095479698.mp3" autoplay>
+		<audio id="sweetNothings" src="./audio/audio.mp3" autoplay preload="auto">
 			Your browser does not support the <code>audio</code> element.
 		</audio>
 		<p id="oath"></p>
-		<img id="timesong" src="./img/0.JPG" width="35%">
+		<img id="timesong" width="35%" height="35%">
 	</div>
 	<script type="text/javascript" src="./js/jquery.min.js"></script>
 	<script type="text/javascript" src="./js/utils.js"></script>
@@ -57,8 +52,21 @@
 			var $timesong = $('#timesong')
 
 			// 图片边框样式
-			var borderStyle = ['inset', 'outset', 'ridge', 'dotted', 'dashed', 'solid', 'double', 'groove'];
-			var borderStyleLength = borderStyle.length
+			var borderStyle = ['inset', 'outset', 'ridge', 'solid', 'double', 'groove'];
+			var borderStyleLen = borderStyle.length - 1
+			// 图片随机路径
+			var imgSrc = getRandomArray(0, 33, 34)
+			var imgSrcLen = imgSrc.length
+
+			// 进入动画
+			var animateIn = ['bouncelnDown', 'bouncelnLeft', 'bouncelnRight', 'bouncelnUp', 'fadelnDownBig', 'fadelnLeftBig', 'fadelnRightBig', 'fadelnUpBig', 'fliplnY', 'lightSpeedln', 'rotateln', 'rotatelnDownLeft', 'rotatelnDownRight', 'rotatelnUpLeft', 'rotatelnUpRight', 'zoomIn', 'zoomInDown', 'zoomInLeft', 'zoomInRight', 'zoomInUp', 'rollIn']
+			var animateInLen = animateIn.length - 1
+			// 强调动画
+			var animateString = ['bounce', 'flash', 'pulse', 'rubberBand', 'shake', 'swing', 'tada', 'wobble', 'jello', 'flip']
+			var animateStringLen = animateString.length - 1
+			// 离开动画
+			var animateOut = ['bounceOutDown', 'bounceOutLeft', 'bounceOutRight', 'bounceOutUp', 'fadeOutDownBig', 'fadeOutLeftBig', 'fadeOutRightBig', 'fadeOutUpBig', 'flipOutY', 'lightSpeedOut', 'rotateOut', 'rotateOutDownLeft', 'rotateOutDownRight', 'rotateOutUpLeft', 'rotateOutUpRight', 'zoomOut', 'zoomOutDown', 'zoomOutLeft', 'zoomOutRight', 'zoomOutUp', 'rollOut']
+			var animateOutLen = animateOut.length - 1
 
 			// 判断横竖屏 start
 			var supportOrientation = typeof window.orientation === 'number' &&
@@ -86,17 +94,21 @@
 				if (orientation === 'landscape') {
 					$love.width(width);
 					$love.height(height);
-					$love.css('top', 0);
-					$love.css('left', 0);
-					$love.css('transform', 'none');
-					$love.css('transform-origin', '50% 50%');
+					$love.css({
+						top: 0,
+						left: 0,
+						transform: 'none',
+						'transform-origin': '50% 50%'
+					})
 				} else {
 					$love.width(height);
 					$love.height(width);
-					$love.css('top', (height - width) / 2);
-					$love.css('left', 0 - (height - width) / 2);
-					$love.css('transform', 'rotate(90deg)');
-					$love.css('transform-origin', '50% 50%');
+					$love.css({
+						top: (height - width) / 2,
+						left: -(height - width) / 2,
+						transform: 'rotate(90deg)',
+						'transform-origin': '50% 50%'
+					})
 				}
 			};
 
@@ -115,23 +127,52 @@
 
 			// 动画状态: 0: 进入 1: 强调 2: 离开
 			var animateStatus = 0
-			function drow(n) {
-				// 判断状态
+			// img src 状态
+			var imgStatus = 0
+			function drow (n) {
+
+				// 判断动画状态
 				if (animateStatus >= 3) {
 					animateStatus = 0
+					$timesong.attr('src', '')
 				}
 
-				// class 切换
+				// 判断 img src 状态
+				if (imgStatus > imgSrcLen) {
+					imgStatus = 0
+				}
+
 				if (animateStatus === 0) {
-					// $love.removeClass().addClass('animated bounceInRight')
-					// 移除 class, 添加进入动画的 class; 切换图片 src
+					// 移除 class, 添加进入动画的 class; 切换图片 src, 添加边框样式和定位
+					$timesong.attr('src', './img/' + imgSrc[imgStatus] + '.JPG')
+					var imgBorderStyle = ''
+					var imgBorderColor = ''
+					for (let i = 0; i < 4; i++) {
+						imgBorderStyle += ' ' + borderStyle[getRandomNum(0, borderStyleLen)]
+						imgBorderColor += ' ' + randomHexColor()
+					}
+					var top = 0
+					var left = 0
+					top = $love.height() - $timesong.height() - 26
+					left = $love.width() - $timesong.width() - 26
+
+					$timesong.css({
+						'border-style': imgBorderStyle,
+						'border-color': imgBorderColor,
+						transform: 'rotate(' + getRandomNum(-25, 25) + 'deg)',
+						top: getRandomNum(0, top),
+						left: getRandomNum(0, left)
+					})
+					$timesong.removeClass().addClass('animated ' + animateIn[getRandomNum(0, animateInLen)])
+
+					imgStatus++
 				} else if (animateStatus === 1) {
-					// $love.removeClass().addClass('animated flash')
-					n = getRandomNum(4000, 6000)
 					// 移除 class, 添加强调动画的 class
+					$timesong.removeClass().addClass('animated ' + animateString[getRandomNum(0, animateStringLen)])
+					n = getRandomNum(4000, 6000)
 				} else if (animateStatus === 2) {
-					// $love.removeClass().addClass('animated rotateOutUpRight')
 					// 移除 class, 添加离开动画的 class
+					$timesong.removeClass().addClass('animated ' + animateOut[getRandomNum(0, animateOutLen)])
 				}
 
 				animateStatus++
