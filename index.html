@@ -29,6 +29,7 @@
 		#timesong {
 			position: absolute;
 			border-width: 8px;
+			display: none;
 		}
 
 	</style>
@@ -36,8 +37,7 @@
 
 <body>
 	<div id="love">
-		<audio id="sweetNothings" src="./audio/audio.mp3" autoplay preload="auto">
-			Your browser does not support the <code>audio</code> element.
+		<audio id="sweetNothings" src="./audio/audio.mp3" autoplay preload="auto" loop>
 		</audio>
 		<p id="oath"></p>
 		<img id="timesong" width="35%" height="35%">
@@ -151,19 +151,20 @@
 						imgBorderStyle += ' ' + borderStyle[getRandomNum(0, borderStyleLen)]
 						imgBorderColor += ' ' + randomHexColor()
 					}
-					var top = 0
-					var left = 0
-					top = $love.height() - $timesong.height() - 26
-					left = $love.width() - $timesong.width() - 26
-
-					$timesong.css({
-						'border-style': imgBorderStyle,
-						'border-color': imgBorderColor,
-						transform: 'rotate(' + getRandomNum(-25, 25) + 'deg)',
-						top: getRandomNum(0, top),
-						left: getRandomNum(0, left)
-					})
-					$timesong.removeClass().addClass('animated ' + animateIn[getRandomNum(0, animateInLen)])
+					var top = $love.height() - $timesong.height() - 26
+					var left = $love.width() - $timesong.width() - 26
+					$timesong.load(function () {
+						// 加载完成
+						$timesong.css({
+							display: 'block',
+							'border-style': imgBorderStyle,
+							'border-color': imgBorderColor,
+							transform: 'rotate(' + getRandomNum(-25, 25) + 'deg)',
+							top: getRandomNum(0, top),
+							left: getRandomNum(0, left)
+						})
+						$timesong.removeClass().addClass('animated ' + animateIn[getRandomNum(0, animateInLen)])
+					});
 
 					imgStatus++
 				} else if (animateStatus === 1) {
@@ -182,7 +183,11 @@
 				}, n);
 
 			}
-			drow(1500)
+
+			// 延迟加载图片, 优先加载音频
+			setTimeout(function ()  {
+				drow(1500)
+			}, 8000);
 
 
 			function audioAutoPlay(id) {
