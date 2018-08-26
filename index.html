@@ -26,12 +26,12 @@
 			background-size: 100% 100%;
 		}
 
-		#timesong {
+		#hold_hands,
+		#grow_old {
 			position: absolute;
 			border-width: 8px;
 			display: none;
 		}
-
 	</style>
 </head>
 
@@ -40,7 +40,8 @@
 		<audio id="sweetNothings" src="./audio/audio.mp3" autoplay preload="auto" loop>
 		</audio>
 		<p id="oath"></p>
-		<img id="timesong" width="35%" height="35%">
+		<img id="hold_hands" width="35%" height="35%">
+		<img id="grow_old" width="35%" height="35%">
 	</div>
 	<script type="text/javascript" src="./js/jquery.min.js"></script>
 	<script type="text/javascript" src="./js/utils.js"></script>
@@ -49,7 +50,8 @@
 
 			var $love = $('#love');
 			var $oath = $('#oath')
-			var $timesong = $('#timesong')
+			var $hold_hands = $('#hold_hands')
+			var $grow_old = $('#grow_old')
 
 			// 图片边框样式
 			var borderStyle = ['inset', 'outset', 'ridge', 'solid', 'double', 'groove'];
@@ -129,12 +131,15 @@
 			var animateStatus = 0
 			// img src 状态
 			var imgStatus = 0
-			function drow (n) {
+
+			var firstEnter = true
+
+			function drow(n) {
 
 				// 判断动画状态
 				if (animateStatus >= 3) {
 					animateStatus = 0
-					$timesong.attr('src', '')
+					$hold_hands.attr('src', '')
 				}
 
 				// 判断 img src 状态
@@ -144,36 +149,72 @@
 
 				if (animateStatus === 0) {
 					// 移除 class, 添加进入动画的 class; 切换图片 src, 添加边框样式和定位
-					$timesong.attr('src', './img/' + imgSrc[imgStatus] + '.JPG')
 					var imgBorderStyle = ''
 					var imgBorderColor = ''
 					for (let i = 0; i < 4; i++) {
 						imgBorderStyle += ' ' + borderStyle[getRandomNum(0, borderStyleLen)]
 						imgBorderColor += ' ' + randomHexColor()
 					}
-					var top = $love.height() - $timesong.height() - 26
-					var left = $love.width() - $timesong.width() - 26
-					$timesong.load(function () {
-						// 加载完成
-						$timesong.css({
-							display: 'block',
-							'border-style': imgBorderStyle,
-							'border-color': imgBorderColor,
-							transform: 'rotate(' + getRandomNum(-25, 25) + 'deg)',
-							top: getRandomNum(0, top),
-							left: getRandomNum(0, left)
-						})
-						$timesong.removeClass().addClass('animated ' + animateIn[getRandomNum(0, animateInLen)])
-					});
+					var top = $love.height() - $hold_hands.height() || $grow_old.height() - 26
+					var left = $love.width() - $hold_hands.width() || $grow_old.width() - 26
+
+					$hold_hands.attr('src', './img/' + imgSrc[imgStatus] + '.JPG')
+					$grow_old.attr('src', './img/' + imgSrc[imgStatus + 1] + '.JPG')
+
+					$hold_hands.css({
+						display: 'block',
+						'border-style': imgBorderStyle,
+						'border-color': imgBorderColor,
+						transform: 'rotate(' + getRandomNum(-25, 25) + 'deg)',
+						top: getRandomNum(0, top),
+						left: getRandomNum(0, left)
+					})
+					$hold_hands.removeClass().addClass('animated ' + animateIn[getRandomNum(0, animateInLen)])
+
+
+					// if (firstEnter) {
+					// 	$hold_hands.show()
+					// 	$grow_old.hide()
+					// 	$hold_hands.css({
+					// 		'border-style': imgBorderStyle,
+					// 		'border-color': imgBorderColor,
+					// 		transform: 'rotate(' + getRandomNum(-25, 25) + 'deg)',
+					// 		top: getRandomNum(0, top),
+					// 		left: getRandomNum(0, left)
+					// 	})
+					// 	$hold_hands.removeClass().addClass('animated ' + animateIn[getRandomNum(0, animateInLen)])
+					// } else {
+					// 	$hold_hands.toggle()
+					// 	$grow_old.toggle()
+					// 	$hold_hands.css({
+					// 		'border-style': imgBorderStyle,
+					// 		'border-color': imgBorderColor,
+					// 		transform: 'rotate(' + getRandomNum(-25, 25) + 'deg)',
+					// 		top: getRandomNum(0, top),
+					// 		left: getRandomNum(0, left)
+					// 	})
+					// 	$hold_hands.removeClass().addClass('animated ' + animateIn[getRandomNum(0, animateInLen)])
+					// 	$grow_old.css({
+					// 		'border-style': imgBorderStyle,
+					// 		'border-color': imgBorderColor,
+					// 		transform: 'rotate(' + getRandomNum(-25, 25) + 'deg)',
+					// 		top: getRandomNum(0, top),
+					// 		left: getRandomNum(0, left)
+					// 	})
+					// 	$grow_old.removeClass().addClass('animated ' + animateIn[getRandomNum(0, animateInLen)])
+					// }
+
+					// $hold_hands.attr('src', './img/' + imgSrc[imgStatus] + '.JPG')
 
 					imgStatus++
 				} else if (animateStatus === 1) {
 					// 移除 class, 添加强调动画的 class
-					$timesong.removeClass().addClass('animated ' + animateString[getRandomNum(0, animateStringLen)])
+					$hold_hands.removeClass().addClass('animated ' + animateString[getRandomNum(0, animateStringLen)])
+					// $grow_old.removeClass().addClass('animated ' + animateString[getRandomNum(0, animateStringLen)])
 					n = getRandomNum(4000, 6000)
 				} else if (animateStatus === 2) {
 					// 移除 class, 添加离开动画的 class
-					$timesong.removeClass().addClass('animated ' + animateOut[getRandomNum(0, animateOutLen)])
+					$hold_hands.removeClass().addClass('animated ' + animateOut[getRandomNum(0, animateOutLen)])
 				}
 
 				animateStatus++
@@ -184,8 +225,10 @@
 
 			}
 
+			$hold_hands.attr('src', './img/' + imgSrc[0] + '.JPG')
+			$grow_old.attr('src', './img/' + imgSrc[1] + '.JPG')
 			// 延迟加载图片, 优先加载音频
-			setTimeout(function ()  {
+			setTimeout(function () {
 				drow(1500)
 			}, 8000);
 
