@@ -22,6 +22,7 @@
 			left: 0;
 			width: 100%;
 			height: 100%;
+			overflow: hidden;
 			background: url('./img/bg.JPG');
 			background-size: 100% 100%;
 		}
@@ -157,8 +158,8 @@
 						imgBorderStyle += ' ' + borderStyle[getRandomNum(0, borderStyleLen)]
 						imgBorderColor += ' ' + randomHexColor()
 					}
-					var top = $love.height() - $hold_hands.height() || $grow_old.height() - 26
-					var left = $love.width() - $hold_hands.width() || $grow_old.width() - 26
+					var top = $love.height() - $hold_hands.height() || $grow_old.height() - 36
+					var left = $love.width() - $hold_hands.width() || $grow_old.width() - 36
 
 					$hold_hands.attr('src', './img/' + imgSrc[imgStatus] + '.JPG')
 					$grow_old.attr('src', './img/' + imgSrc[imgStatus + 1] + '.JPG')
